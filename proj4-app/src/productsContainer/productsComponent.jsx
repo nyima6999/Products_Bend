@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
-import SingleProductComponent from "./singleProductComponent/singleProductComponent";
-
+import SingleProductComponent from "../classyProductContainer/singleProductComponent/singleProductComponent";
 const ProductsComponent = () => {
   const [products, setProducts] = useState([]);
   const getProducts = async () => {
     const getProductsApiResponse = await fetch(
-      "http://localhost:8000/api/products"
+      "http://localhost:8000/api/products/"
     );
     const parsedProducts = await getProductsApiResponse.json();
     setProducts(parsedProducts);
   };
   return (
     <div>
-      <h2>Products</h2>
-      <button onClick={getProducts}>Get Products</button>
+      {/* <h2>Products</h2> */}
+      {/* <button onClick={getProducts}>Get Products</button> */}
       {products.map((product) => {
         return (
           <SingleProductComponent

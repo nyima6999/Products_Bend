@@ -1,6 +1,7 @@
 import store247 from "./store247 .png";
 import "./App.css";
 import ProductsComponent from "./productsContainer/productsComponent";
+import ClassyProductsContainer from "./classyProductContainer/classyProductsCoponent";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <img src={store247} className="App-logo" alt="logo" />
       </header>
       <ProductsComponent />
+      <ClassyProductsContainer />
     </div>
   );
 }
