@@ -11,6 +11,10 @@ class ClassyProductsContainer extends React.Component {
         title: "",
         description: "",
       },
+      updateProduct: {
+        title: "",
+        description: "",
+      },
     };
   }
 
@@ -55,37 +59,50 @@ class ClassyProductsContainer extends React.Component {
   // delete route
   deleteProduct = async (idToDelete) => {
     const deleteResponse = await fetch(
-      `http://localhost:8000/api/products/${idToDelete}/`,
+      `http://localhost:8000/api/products/${idToDelete}`,
       {
         method: "DELETE",
       }
     );
-    console.log(deleteResponse.status);
+
     if (deleteResponse.status == 204) {
       this.setState({
-        products: this.state.products.filter((p) => p.id == idToDelete),
+        products: this.state.products.filter(
+          (product) => product.id !== idToDelete
+        ),
       });
     }
   };
 
   // update route
-  //   handleUpdateProductInputChange = (e) => {
-  //   this.setState({
-  //     updateProduct: {
-  //       ...this.state.updateProduct,
-  //       [e.target.name]: e.target.value,
-  //     },
-  //   });
-  // };
-  // updateProduct = async => {
-  //   const apiResponse = await fetch(`http://localhost:8000/api/products/${idToUpdate}/`, {
-  //     method: "PUT",
-  //     body: JSON.stringify(this.state.updateProduct),
-  //     headers: {
-  //        "Content-Type": "application/json"
-  //     }
-  //   })
-  // }
+  handleUpdateProductInputChange = (e) => {
+    this.setState({
+      updateProduct: {
+        ...this.state.updateProduct,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+  updateProduct = async (idToUpdate) => {
+    const apiResponse = await fetch(
+      `http://localhost:8000/api/products/${idToUpdate}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(this.state.updateProduct),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (apiResponse.status == 200) {
+      const parsedResponse = await apiResponse.json();
+      this.setState({
+        products: this.state.products.map((p) =>
+          p.id === idToUpdate ? parsedResponse : p
+        ),
+      });
+    }
+  };
 
   componentDidMount() {
     this.getProducts();
@@ -104,6 +121,10 @@ class ClassyProductsContainer extends React.Component {
         {this.state.products.map((product) => {
           return (
             <SingleProductComponent
+              handleUpdateProductInputChange={
+                this.handleUpdateProductInputChange
+              }
+              updateProduct={this.updateProduct}
               deleteProduct={this.deleteProduct}
               product={product}
               key={`product-${product.id}`}
